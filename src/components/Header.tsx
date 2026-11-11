@@ -1,14 +1,119 @@
 import { Link } from "react-router";
 import Button from "./Button";
+import { UserContext } from "../context/UserContext";
+import { useContext, useEffect } from "react";
+import {
+  LogOut,
+  ShoppingCartPlus,
+  Box,
+  LayoutDashboard,
+  Plus,
+} from "lucide-react";
+import { useLocation } from "react-router";
 
 const Header = () => {
+  const { user, setUser } = useContext(UserContext);
+  const location = useLocation();
+
+  console.log(location.pathname);
+
+  const handleAuthUser = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/me", {
+        credentials: "include",
+      });
+
+      if (response.status !== 200) {
+        console.log("deu ruim");
+        return;
+      }
+
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/logout", {
+        credentials: "include",
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        console.log("não deu derto");
+        return;
+      }
+
+      setUser(null);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    handleAuthUser();
+  }, []);
+
+  const getNavItemClass = (path: string) => {
+    const baseClass =
+      "flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-md border-1";
+    if (location.pathname === path) {
+      return `${baseClass} text-[#161410] bg-[#F2DAAC]`;
+    } else {
+      return baseClass;
+    }
+  };
+
   return (
     <div className="bg-[#161410]">
-      <div className="w:md-[737px] mx-auto flex w-full items-center justify-between p-3 md:p-0">
-        <img src="./logo.png" alt="" />
-        <Link to="/login">
-          <Button title="Entrar" variant="navigation"></Button>
+      <div className="mx-auto flex w-full items-center justify-between p-3 md:w-[737px] md:p-0">
+        <Link to="/">
+          <img src="./logo.png" alt="" />
         </Link>
+        {user ? (
+          <div className="flex items-center gap-8 text-white">
+            {user.admin && (
+              <div className="hidden items-center gap-2 text-[#F2DAAC] md:flex">
+                <Link to="/">
+                  <div className={getNavItemClass("/")}>
+                    <Box size={18} />
+                  </div>
+                </Link>
+                <Link to="/pedidos">
+                  <div className={getNavItemClass("/pedidos")}>
+                    <LayoutDashboard size={18} />
+                  </div>
+                </Link>
+                <div className="flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-md border-1">
+                  <Plus size={18} />
+                </div>
+              </div>
+            )}
+            <div className="relative cursor-pointer">
+              <p className="absolute -top-4 -right-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#F2DAAC] text-[#161410]">
+                1
+              </p>
+              <ShoppingCartPlus size={18} />
+            </div>
+            <div className="flex items-center gap-2">
+              Olá, {user.name}
+              <LogOut
+                size={18}
+                className="cursor-pointer"
+                onClick={() => handleLogout()}
+              />
+            </div>
+          </div>
+        ) : (
+          <Link to="/login">
+            <Button title="Entrar" variant="navigation"></Button>
+          </Link>
+        )}
       </div>
     </div>
   );
