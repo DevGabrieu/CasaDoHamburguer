@@ -1,5 +1,5 @@
 import { ShoppingCartPlus } from "lucide-react";
-import type { ProductType } from "../types/Product";
+import type { ProductProps } from "../types/Product";
 import { formatterPrice } from "../utils/formatterPrice";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ const Product = ({
   price,
   img,
   setProducts,
-}: ProductType) => {
+}: ProductProps) => {
   const { user } = useContext(UserContext);
 
   const handleDeleteProduct = async (id: string) => {
@@ -74,7 +74,11 @@ const Product = ({
           </p>
           <div className="flex items-center justify-end gap-2">
             <p className="text-sm text-[#F2DAAC]">{formatterPrice(price)}</p>
-            <ShoppingCartPlus size={18} className="cursor-pointer" onClick={() => alert(id)}/>
+            <ShoppingCartPlus
+              size={18}
+              className="cursor-pointer"
+              onClick={() => alert(id)}
+            />
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Product from "../components/Product";
-import type { ProductType } from "../types/Product";
+import type { ProductProps } from "../types/Product";
 
 const Home = () => {
   const [category, setCategory] = useState("Hamburguer");
-  const [products, setProducts] = useState<ProductType[]>([]);
+  const [products, setProducts] = useState<ProductProps[]>([]);
 
   const handleChangeCategory = (newCategory: string) => {
     setCategory(newCategory);
