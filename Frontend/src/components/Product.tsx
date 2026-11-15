@@ -1,8 +1,9 @@
-import { ShoppingCartPlus } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import type { ProductProps } from "../types/Product";
 import { formatterPrice } from "../utils/formatterPrice";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
+import { CartItemContext } from "../context/CartItemsContext";
 
 const Product = ({
   id,
@@ -13,6 +14,7 @@ const Product = ({
   setProducts,
 }: ProductProps) => {
   const { user } = useContext(UserContext);
+  const { cartItems, setCartItems } = useContext(CartItemContext);
 
   const handleDeleteProduct = async (id: string) => {
     try {
@@ -39,11 +41,51 @@ const Product = ({
     }
   };
 
+  const getCartItem = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/get-cart-items", {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        console.log("Erro ao realizar a requisição");
+        return;
+      }
+
+      const data = await response.json();
+      setCartItems(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
   const getProduct = async () => {
     try {
       const response = await fetch("http://localhost:3000/get-products");
       const data = await response.json();
       setProducts(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
+  const newCartItem = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/create-cart-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ productId: id }),
+      });
+
+      if (!response.ok) {
+        console.log("Deu erro");
+        return;
+      } else {
+        getCartItem();
+      }
     } catch (error) {
       console.log(error);
       return;
@@ -74,10 +116,10 @@ const Product = ({
           </p>
           <div className="flex items-center justify-end gap-2">
             <p className="text-sm text-[#F2DAAC]">{formatterPrice(price)}</p>
-            <ShoppingCartPlus
+            <ShoppingBag
               size={18}
               className="cursor-pointer"
-              onClick={() => alert(id)}
+              onClick={() => newCartItem()}
             />
           </div>
         </div>

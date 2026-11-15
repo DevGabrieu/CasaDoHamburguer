@@ -10,7 +10,6 @@ type CartTypeProps = {
 };
 
 const Cart = ({ setShowCart, showCart }: CartTypeProps) => {
-  //   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const { cartItems, setCartItems } = useContext(CartItemContext);
 
   const getCartItem = async () => {
@@ -21,6 +20,7 @@ const Cart = ({ setShowCart, showCart }: CartTypeProps) => {
 
       if (!response.ok) {
         console.log("Erro ao realizar a requisição");
+        return;
       }
 
       const data = await response.json();
@@ -52,6 +52,7 @@ const Cart = ({ setShowCart, showCart }: CartTypeProps) => {
             price={item.product.price}
             img={item.product.img}
             id={item.product.id}
+            quantity={item.quantity}
           />
         ))}
       </div>

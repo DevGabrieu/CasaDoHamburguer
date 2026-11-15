@@ -16,7 +16,7 @@ import { CartItemContext } from "../context/CartItemsContext";
 const Header = () => {
   const [showCart, setShowCart] = useState<boolean>(false);
   const { user, setUser } = useContext(UserContext);
-  const { cartItems } = useContext(CartItemContext);
+  const { cartItems, setCartItems } = useContext(CartItemContext);
   const location = useLocation();
 
   console.log(location.pathname);
@@ -59,8 +59,28 @@ const Header = () => {
     }
   };
 
+  const getCartItem = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/get-cart-items", {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        console.log("Erro ao realizar a requisição");
+        return;
+      }
+
+      const data = await response.json();
+      setCartItems(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
   useEffect(() => {
     handleAuthUser();
+    getCartItem();
   }, []);
 
   const getNavItemClass = (path: string) => {
@@ -72,6 +92,12 @@ const Header = () => {
       return baseClass;
     }
   };
+
+  let cartQuantity = 0;
+
+  for (let i = 0; i < cartItems.length; i++) {
+    cartQuantity += cartItems[i].quantity;
+  }
 
   return (
     <div className="bg-[#161410]">
@@ -102,7 +128,7 @@ const Header = () => {
             )}
             <div className="relative cursor-pointer">
               <p className="absolute -top-4 -right-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#F2DAAC] text-[#161410]">
-                {cartItems.length}
+                {cartQuantity}
               </p>
               <ShoppingCartPlus
                 size={18}
