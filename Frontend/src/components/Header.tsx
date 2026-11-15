@@ -11,10 +11,12 @@ import {
 } from "lucide-react";
 import { useLocation } from "react-router";
 import Cart from "./Cart";
+import { CartItemContext } from "../context/CartItemsContext";
 
 const Header = () => {
   const [showCart, setShowCart] = useState<boolean>(false);
   const { user, setUser } = useContext(UserContext);
+  const { cartItems } = useContext(CartItemContext);
   const location = useLocation();
 
   console.log(location.pathname);
@@ -100,7 +102,7 @@ const Header = () => {
             )}
             <div className="relative cursor-pointer">
               <p className="absolute -top-4 -right-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#F2DAAC] text-[#161410]">
-                1
+                {cartItems.length}
               </p>
               <ShoppingCartPlus
                 size={18}
