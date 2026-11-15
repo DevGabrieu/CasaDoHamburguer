@@ -10,6 +10,7 @@ import {
   deleteProduct,
   getProducts,
 } from "./controllers/product-controller.js";
+import { getCartItems } from "./controllers/cartItem-controller.js";
 
 export const router = Router();
 
@@ -23,3 +24,6 @@ router.post("/logout", authMiddleware, logout);
 
 router.get("/get-products", getProducts);
 router.delete("/delete-product/:id", authMiddleware, deleteProduct);
+
+// Cart
+router.get("/get-cart-items", authMiddleware, getCartItems);

@@ -1,4 +1,5 @@
 import { Calendar, Clock, ClockPlus, User } from "lucide-react";
+import { useEffect, useState } from "react";
 
 type CardPedidoType = {
   id: number;
@@ -17,6 +18,9 @@ const CardPedido = ({
   deliveredTime,
   total,
 }: CardPedidoType) => {
+  
+
+
   return (
     <div className="rounded-md bg-[#F2DAAC] p-2 text-[#32343E]">
       <div className="flex justify-between">
