@@ -10,7 +10,10 @@ import {
   deleteProduct,
   getProducts,
 } from "./controllers/product-controller.js";
-import { getCartItems } from "./controllers/cartItem-controller.js";
+import {
+  getCartItems,
+  createCartItem,
+} from "./controllers/cartItem-controller.js";
 
 export const router = Router();
 
@@ -27,3 +30,4 @@ router.delete("/delete-product/:id", authMiddleware, deleteProduct);
 
 // Cart
 router.get("/get-cart-items", authMiddleware, getCartItems);
+router.post("/create-cart-item", authMiddleware, createCartItem);
